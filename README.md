@@ -1,3 +1,3 @@
 # CustomizableLayout
 
-A description of this package.
+A wrapper to create UICollectionViewLayout easier.
