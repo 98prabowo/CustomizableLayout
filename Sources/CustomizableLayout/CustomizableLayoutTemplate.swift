@@ -443,54 +443,54 @@ extension CustomizableLayout {
             
             return layout
         }
-    }
-    
-    /// Create a horizontal list with full width layout.
-    ///
-    /// - Parameters:
-    ///     - spacing: A space between cell horizontally.
-    ///     - margins: The amount of how large the cell will be shrink.
-    public static func horizontalListFullWidthLayout(
-        spacing: CGFloat = 0.0,
-        margins: UIEdgeInsets
-    ) -> CustomizableLayout {
-        let layout = CustomizableLayout(scrollDirection: .horizontal, margins: margins)
         
-        layout.sizeCalculationBlock = { [weak layout] _ in
-            guard let collectionView = layout?.collectionView else { return .zero }
+        /// Create a horizontal list with full width layout.
+        ///
+        /// - Parameters:
+        ///     - spacing: A space between cell horizontally.
+        ///     - margins: The amount of how large the cell will be shrink.
+        public static func horizontalListFullWidthLayout(
+            spacing: CGFloat = 0.0,
+            margins: UIEdgeInsets
+        ) -> CustomizableLayout {
+            let layout = CustomizableLayout(scrollDirection: .horizontal, margins: margins)
             
-            let verticalWhiteSpaceFromMargins: CGFloat = margins.top + margins.bottom
-            let horizontalWhiteSpaceFromMargins: CGFloat = margins.left + margins.right
+            layout.sizeCalculationBlock = { [weak layout] _ in
+                guard let collectionView = layout?.collectionView else { return .zero }
+                
+                let verticalWhiteSpaceFromMargins: CGFloat = margins.top + margins.bottom
+                let horizontalWhiteSpaceFromMargins: CGFloat = margins.left + margins.right
+                
+                return CustomizableLayout.Size(
+                    width: .fixed(collectionView.bounds.width - horizontalWhiteSpaceFromMargins),
+                    height: .fixed(collectionView.bounds.height - verticalWhiteSpaceFromMargins)
+                )
+            }
             
-            return CustomizableLayout.Size(
-                width: .fixed(collectionView.bounds.width - horizontalWhiteSpaceFromMargins),
-                height: .fixed(collectionView.bounds.height - verticalWhiteSpaceFromMargins)
-            )
+            layout.preparationBlock = { env in
+                var attributes: [UICollectionViewLayoutAttributes] = []
+                var xOffset = margins.left
+                (0 ..< env.numberOfSections())
+                    .forEach { section in
+                        let attribute = UICollectionViewLayoutAttributes(section: section)
+                        let size = env.sizeForSection(section)
+                        let yOffset = margins.top
+                        
+                        attribute.frame = CGRect(
+                            x: xOffset,
+                            y: yOffset,
+                            width: size.width,
+                            height: size.height
+                        )
+                        
+                        xOffset += size.width + spacing
+                        attributes.append(attribute)
+                    }
+                return attributes
+            }
+            
+            return layout
         }
-        
-        layout.preparationBlock = { env in
-            var attributes: [UICollectionViewLayoutAttributes] = []
-            var xOffset = margins.left
-            (0 ..< env.numberOfSections())
-                .forEach { section in
-                    let attribute = UICollectionViewLayoutAttributes(section: section)
-                    let size = env.sizeForSection(section)
-                    let yOffset = margins.top
-                    
-                    attribute.frame = CGRect(
-                        x: xOffset,
-                        y: yOffset,
-                        width: size.width,
-                        height: size.height
-                    )
-                    
-                    xOffset += size.width + spacing
-                    attributes.append(attribute)
-                }
-            return attributes
-        }
-        
-        return layout
     }
     
     // MARK: - Layout Types
