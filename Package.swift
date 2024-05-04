@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "CustomizableLayout",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v13)
     ],
     products: [
         .library(
@@ -14,7 +14,7 @@ let package = Package(
             targets: ["CustomizableLayout"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nickaroot/Texture.git", branch: "spm")
+        .package(url: "https://github.com/FluidGroup/Texture.git", from: "3.0.2")
     ],
     targets: [
         .target(
